@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>From Figma to Storybook with Claude — A Designer's Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cc-orange: #EA633F;
+  --cc-yellow: #E8EB74;
+  --cc-cyan: #88E8F0;
+  --cc-cream: #EAEAC8;
+  --cc-black: #121212;
+  --cc-near-black: #1E1E1E;
+  --cc-white: #FFFFFF;
+  --cc-light-gray: #F5F5F5;
+  --cc-warm-gray: #E8E8E8;
+  --cc-mid-gray: #666666;
+  --cc-font-display: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif;
+  --cc-font-body: 'Inter', Arial, sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+h1, h2, h3, h4, h5, h6 { font-family: var(--cc-font-display); }
+body, p, span, li, td, input, textarea { font-family: var(--cc-font-body); }
+
+body {
+  background: var(--cc-white);
+  color: var(--cc-black);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── HERO SECTION ── */
+.hero {
+  background: var(--cc-orange);
+  min-height: 80vh;
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-logo {
+  position: absolute;
+  top: 50px;
+  left: 80px;
+  z-index: 3;
+}
+
+.hero-logo img {
+  width: 110px;
+  display: block;
+}
+
+.hero-content {
+  padding: 80px 40px 80px 80px;
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.hero-illustration {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 60px 60px 0;
+}
+
+.hero-illustration svg {
+  width: 320px;
+  height: 320px;
+}
+
+.hero-label {
+  font-family: var(--cc-font-display);
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--cc-black);
+  opacity: 0.7;
+  margin-bottom: 24px;
+}
+
+.hero h1 {
+  font-size: 5.25rem;
+  font-weight: 400;
+  line-height: 1.0;
+  color: var(--cc-black);
+  margin-bottom: 36px;
+}
+
+.hero h1 em {
+  font-style: italic;
+  text-decoration: underline;
+  text-decoration-color: var(--cc-black);
+  text-underline-offset: 6px;
+  text-decoration-thickness: 3px;
+}
+
+.hero p.hero-body {
+  font-size: 1.0625rem;
+  color: var(--cc-black);
+  max-width: 480px;
+  line-height: 1.65;
+  margin-bottom: 28px;
+}
+
+.hero-bullets {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 36px 0;
+}
+
+.hero-bullets li {
+  font-family: var(--cc-font-body);
+  font-size: 0.9375rem;
+  color: var(--cc-black);
+  padding: 8px 0;
+  padding-left: 28px;
+  position: relative;
+}
+
+.hero-bullets li::before {
+  content: '\2192';
+  position: absolute;
+  left: 0;
+  color: var(--cc-black);
+  font-weight: 500;
+}
+
+/* ── SIDEBAR LABEL ── */
+.sidebar-label {
+  position: fixed;
+  left: 16px;
+  top: 50%;
+  transform: rotate(-90deg) translateX(-50%);
+  transform-origin: left center;
+  font-family: var(--cc-font-display);
+  font-size: 0.625rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--cc-mid-gray);
+  z-index: 100;
+  white-space: nowrap;
+}
+
+/* ── INTRO SECTION ── */
+.intro-section {
+  background: var(--cc-cream);
+  padding: 80px 60px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: start;
+}
+
+.intro-section h2 {
+  font-size: 2.25rem;
+  font-weight: 400;
+  line-height: 1.15;
+  color: var(--cc-black);
+}
+
+.intro-section p {
+  font-size: 1rem;
+  color: var(--cc-black);
+  line-height: 1.65;
+}
+
+/* ── STEP SECTIONS ── */
+.step-section {
+  padding: 80px 60px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.step-section.alt-bg {
+  background: var(--cc-light-gray);
+  max-width: 100%;
+}
+
+.step-section.alt-bg .step-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.step-number {
+  font-family: var(--cc-font-display);
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--cc-orange);
+  margin-bottom: 12px;
+  display: block;
+}
+
+.step-section h2 {
+  font-size: 2rem;
+  font-weight: 400;
+  line-height: 1.15;
+  color: var(--cc-black);
+  margin-bottom: 32px;
+}
+
+.step-section h3 {
+  font-family: var(--cc-font-display);
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: var(--cc-black);
+  margin-top: 40px;
+  margin-bottom: 16px;
+}
+
+.step-section p {
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--cc-black);
+  max-width: 640px;
+  margin-bottom: 16px;
+}
+
+.step-section a {
+  color: var(--cc-orange);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.step-section a:hover {
+  opacity: 0.8;
+}
+
+/* ── INSTRUCTION CARDS ── */
+.instruction-card {
+  background: var(--cc-white);
+  border: 1px solid var(--cc-warm-gray);
+  border-radius: 8px;
+  padding: 28px 32px;
+  margin-bottom: 16px;
+  max-width: 720px;
+}
+
+.instruction-card.highlight {
+  border-left: 4px solid var(--cc-orange);
+}
+
+.instruction-card.highlight-cyan {
+  border-left: 4px solid var(--cc-cyan);
+}
+
+.instruction-card.highlight-yellow {
+  border-left: 4px solid var(--cc-yellow);
+}
+
+.instruction-card h4 {
+  font-family: var(--cc-font-display);
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--cc-black);
+  margin-bottom: 8px;
+}
+
+.instruction-card p {
+  font-size: 0.9375rem;
+  color: var(--cc-mid-gray);
+  margin-bottom: 8px;
+  max-width: 100%;
+}
+
+.instruction-card code {
+  font-family: 'IBM Plex Mono', 'Menlo', monospace;
+  background: var(--cc-light-gray);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  color: var(--cc-black);
+}
+
+.code-block {
+  background: var(--cc-black);
+  color: #e0e0e0;
+  padding: 20px 24px;
+  border-radius: 8px;
+  font-family: 'IBM Plex Mono', 'Menlo', monospace;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  margin: 16px 0 24px;
+  max-width: 720px;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+/* ── RESOURCE GRID ── */
+.resource-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  margin-top: 24px;
+  max-width: 960px;
+}
+
+.resource-card {
+  background: var(--cc-white);
+  border: 1px solid var(--cc-warm-gray);
+  border-radius: 8px;
+  padding: 24px 28px;
+  transition: box-shadow 0.2s;
+}
+
+.resource-card:hover {
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+.resource-card .resource-type {
+  font-family: var(--cc-font-display);
+  font-size: 0.65rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--cc-orange);
+  margin-bottom: 8px;
+}
+
+.resource-card h4 {
+  font-family: var(--cc-font-display);
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--cc-black);
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+
+.resource-card p {
+  font-size: 0.875rem;
+  color: var(--cc-mid-gray);
+  line-height: 1.5;
+  margin-bottom: 12px;
+  max-width: 100%;
+}
+
+.resource-card a {
+  font-family: var(--cc-font-display);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--cc-orange);
+  text-decoration: none;
+}
+
+.resource-card a::after {
+  content: ' →';
+}
+
+/* ── SECTION DIVIDERS ── */
+.section-divider {
+  padding: 60px;
+  display: flex;
+  align-items: center;
+  min-height: 30vh;
+  position: relative;
+}
+
+.section-divider.cyan {
+  background: var(--cc-cyan);
+}
+
+.section-divider.yellow {
+  background: var(--cc-yellow);
+}
+
+.section-divider.orange {
+  background: var(--cc-orange);
+}
+
+.section-divider h2 {
+  font-size: 2.75rem;
+  font-weight: 300;
+  line-height: 1.1;
+  color: var(--cc-black);
+  max-width: 600px;
+}
+
+.section-divider .section-tag {
+  font-family: var(--cc-font-display);
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--cc-black);
+  opacity: 0.6;
+  margin-bottom: 16px;
+  display: block;
+}
+
+/* ── PROMPT TEMPLATE BOX ── */
+.prompt-box {
+  background: var(--cc-cream);
+  border-radius: 8px;
+  padding: 32px;
+  margin: 16px 0 24px;
+  max-width: 720px;
+}
+
+.prompt-box h4 {
+  font-family: var(--cc-font-display);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--cc-black);
+  margin-bottom: 12px;
+}
+
+.prompt-box pre {
+  font-family: var(--cc-font-body);
+  font-size: 0.9375rem;
+  color: var(--cc-black);
+  line-height: 1.65;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* ── PILL / TAG ── */
+.pill {
+  display: inline-block;
+  padding: 6px 16px;
+  background: var(--cc-light-gray);
+  border-radius: 20px;
+  font-size: 0.75rem;
+  color: #333;
+  margin: 4px 4px 4px 0;
+}
+
+/* ── TIP CALLOUT ── */
+.tip {
+  background: rgba(136,232,240,0.15);
+  border-left: 4px solid var(--cc-cyan);
+  padding: 20px 24px;
+  border-radius: 0 8px 8px 0;
+  margin: 24px 0;
+  max-width: 720px;
+}
+
+.tip p {
+  font-size: 0.9375rem;
+  max-width: 100%;
+  margin-bottom: 0;
+}
+
+.tip strong {
+  font-family: var(--cc-font-display);
+  font-weight: 500;
+}
+
+/* ── FOOTER ── */
+.footer {
+  background: var(--cc-black);
+  padding: 80px 60px;
+  color: var(--cc-white);
+}
+
+.footer h2 {
+  font-size: 2.5rem;
+  font-weight: 300;
+  color: var(--cc-white);
+  margin-bottom: 24px;
+}
+
+.footer p {
+  font-size: 1rem;
+  color: rgba(255,255,255,0.6);
+  max-width: 500px;
+  line-height: 1.6;
+}
+
+.footer a {
+  color: var(--cc-orange);
+  text-decoration: none;
+}
+
+.footer-bar {
+  margin-top: 60px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footer-bar span {
+  font-family: var(--cc-font-display);
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: rgba(255,255,255,0.4);
+}
+
+/* ── NUMBERED LIST STEPS ── */
+.numbered-steps {
+  counter-reset: step;
+  list-style: none;
+  padding: 0;
+  max-width: 640px;
+}
+
+.numbered-steps li {
+  counter-increment: step;
+  position: relative;
+  padding-left: 48px;
+  margin-bottom: 24px;
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--cc-black);
+}
+
+.numbered-steps li::before {
+  content: counter(step);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 32px;
+  height: 32px;
+  background: var(--cc-orange);
+  color: var(--cc-black);
+  font-family: var(--cc-font-display);
+  font-weight: 600;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+/* ── ACCENT DIVIDER ── */
+hr.accent {
+  border: none;
+  height: 4px;
+  background: var(--cc-orange);
+  margin: 60px 0;
+  max-width: 80px;
+}
+
+@media (max-width: 768px) {
+  .hero { grid-template-columns: 1fr; min-height: auto; }
+  .hero-content { padding: 60px 32px; }
+  .hero-illustration { padding: 0 32px 40px; }
+  .hero-illustration svg { width: 240px; height: 240px; }
+  .hero h1 { font-size: 2.75rem; }
+  .intro-section { grid-template-columns: 1fr; padding: 60px 32px; }
+  .step-section { padding: 60px 32px; }
+  .section-divider { padding: 40px 32px; }
+  .section-divider h2 { font-size: 2rem; }
+  .sidebar-label { display: none; }
+  .footer { padding: 60px 32px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!--  HERO                                              -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-logo">
+    <img src="../../assets/CCWorkMark_Horiz_Black.png" alt="Chameleon Collective">
+  </div>
+  <div class="hero-content">
+    <span class="hero-label">Designer's Quick-Start Guide</span>
+    <h1>From Figma<br>to Storybook<br>with <em>Claude Code</em>.</h1>
+    <p class="hero-body">A flexible workflow that gives designers continuous access to production-ready components — without the cost or delay of hand-coding.</p>
+    <ul class="hero-bullets">
+      <li>Install and connect in minutes</li>
+      <li>Turn Figma designs into real components</li>
+      <li>Build a living design system</li>
+    </ul>
+  </div>
+  <div class="hero-illustration">
+    <svg viewBox="0 0 360 360" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <!-- Halftone dot patterns -->
+        <pattern id="ht-dense" x="0" y="0" width="4" height="4" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="1.2" fill="#121212" opacity="0.4"/>
+        </pattern>
+        <pattern id="ht-light" x="0" y="0" width="5" height="5" patternUnits="userSpaceOnUse">
+          <circle cx="2.5" cy="2.5" r="1.3" fill="#121212" opacity="0.22"/>
+        </pattern>
+        <!-- Arrowhead marker -->
+        <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M 0 1 L 9 5 L 0 9 Z" fill="#121212"/>
+        </marker>
+        <marker id="arrow-sm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+          <path d="M 0 1.5 L 9 5 L 0 8.5 Z" fill="#121212"/>
+        </marker>
+      </defs>
+
+      <!-- ── TOP BOX: Small halftone card ── -->
+      <g transform="translate(138, 18)">
+        <rect width="84" height="52" rx="6" fill="url(#ht-light)" stroke="#121212" stroke-width="2"/>
+        <rect x="18" y="18" width="48" height="4" rx="2" fill="#121212" opacity="0.5"/>
+        <rect x="22" y="28" width="40" height="4" rx="2" fill="#121212" opacity="0.3"/>
+      </g>
+
+      <!-- Arrow: top to center -->
+      <path d="M 180 70 L 180 94" stroke="#121212" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+
+      <!-- ── CENTER BOX: Large dark card (Claude/processor) ── -->
+      <g transform="translate(110, 100)">
+        <rect width="140" height="90" rx="8" fill="url(#ht-dense)" stroke="#121212" stroke-width="2.5"/>
+        <!-- Dark top portion -->
+        <rect x="0" y="0" width="140" height="48" rx="8" fill="#121212"/>
+        <rect x="0" y="36" width="140" height="12" fill="#121212"/>
+        <!-- Orange accent line inside dark area -->
+        <rect x="42" y="22" width="56" height="4" rx="2" fill="#EA633F" opacity="0.9"/>
+        <!-- Halftone bottom portion content lines -->
+        <rect x="20" y="58" width="100" height="4" rx="2" fill="#121212" opacity="0.35"/>
+        <rect x="20" y="70" width="72" height="4" rx="2" fill="#121212" opacity="0.2"/>
+      </g>
+
+      <!-- Arrow: left into center -->
+      <path d="M 56 145 L 104 145" stroke="#121212" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+
+      <!-- Arrow: center right out -->
+      <path d="M 250 145 L 310 145 L 310 90 L 310 40 L 230 40" stroke="#121212" stroke-width="2" fill="none" marker-end="url(#arrow)" stroke-linejoin="round"/>
+
+      <!-- Arrow: center down -->
+      <path d="M 180 190 L 180 212" stroke="#121212" stroke-width="2" fill="none" marker-end="url(#arrow-sm)"/>
+
+      <!-- ── NUMBERED CIRCLES ROW ── -->
+      <!-- Circle 1 -->
+      <g transform="translate(68, 220)">
+        <circle cx="14" cy="14" r="14" fill="#121212"/>
+        <text x="14" y="18.5" text-anchor="middle" fill="#fff" font-family="IBM Plex Sans, sans-serif" font-size="13" font-weight="500">1</text>
+      </g>
+      <!-- Connector line 1-3 -->
+      <line x1="96" y1="234" x2="148" y2="234" stroke="#121212" stroke-width="2"/>
+      <!-- Circle 3 -->
+      <g transform="translate(148, 220)">
+        <circle cx="14" cy="14" r="14" fill="#121212"/>
+        <text x="14" y="18.5" text-anchor="middle" fill="#fff" font-family="IBM Plex Sans, sans-serif" font-size="13" font-weight="500">3</text>
+      </g>
+      <!-- Connector line 3-5 -->
+      <line x1="176" y1="234" x2="234" y2="234" stroke="#121212" stroke-width="2"/>
+      <!-- Circle 5 -->
+      <g transform="translate(234, 220)">
+        <circle cx="14" cy="14" r="14" fill="#121212"/>
+        <text x="14" y="18.5" text-anchor="middle" fill="#fff" font-family="IBM Plex Sans, sans-serif" font-size="13" font-weight="500">5</text>
+      </g>
+
+      <!-- Arrow: circle 5 down -->
+      <path d="M 248 248 L 248 268" stroke="#121212" stroke-width="2" fill="none" marker-end="url(#arrow-sm)"/>
+
+      <!-- Arrow: circle 1 down and left loop -->
+      <path d="M 82 248 L 82 268 L 82 330 L 40 330 L 40 145 L 50 145" stroke="#121212" stroke-width="2" fill="none" stroke-linejoin="round"/>
+
+      <!-- Arrow: from right back to circle 5 -->
+      <path d="M 310 234 L 268 234" stroke="#121212" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+
+      <!-- ── BOTTOM LEFT BOX: Halftone card ── -->
+      <g transform="translate(70, 276)">
+        <rect width="120" height="66" rx="6" fill="url(#ht-light)" stroke="#121212" stroke-width="2"/>
+        <!-- Orange fill area -->
+        <rect x="6" y="24" width="108" height="36" rx="4" fill="#EA633F" opacity="0.55"/>
+        <rect x="24" y="10" width="52" height="4" rx="2" fill="#121212" opacity="0.5"/>
+      </g>
+
+      <!-- ── BOTTOM RIGHT BOX: Halftone card ── -->
+      <g transform="translate(210, 268)">
+        <rect width="100" height="74" rx="6" fill="url(#ht-dense)" stroke="#121212" stroke-width="2"/>
+        <rect x="24" y="18" width="52" height="4" rx="2" fill="#121212" opacity="0.45"/>
+        <rect x="18" y="30" width="64" height="4" rx="2" fill="#121212" opacity="0.25"/>
+        <!-- Orange block -->
+        <rect x="6" y="42" width="88" height="26" rx="4" fill="#EA633F" opacity="0.45"/>
+      </g>
+
+      <!-- Arrow: bottom right back up to right side -->
+      <path d="M 310 310 L 310 234" stroke="#121212" stroke-width="2" fill="none"/>
+
+      <!-- Arrow: bottom left to bottom right -->
+      <path d="M 190 310 L 204 310" stroke="#121212" stroke-width="2" fill="none" marker-end="url(#arrow-sm)"/>
+
+    </svg>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!--  INTRO                                             -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section class="intro-section">
+  <div>
+    <h2>What You'll Learn</h2>
+  </div>
+  <div>
+    <p>This guide walks you through six stages: installing Claude, learning the basics, connecting Figma, turning designs into code, building a Storybook design system, and capturing design tokens with reusable prompts. Each section includes links to the best tutorials and videos so you can learn at your own pace.</p>
+    <div style="margin-top: 24px;">
+      <span class="pill">Beginner Friendly</span>
+      <span class="pill">No Coding Experience Needed</span>
+      <span class="pill">Visual Walkthroughs</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!--  STEP 1: INSTALLING CLAUDE                         -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section class="step-section">
+  <span class="step-number">Step 1</span>
+  <h2>Installing Claude</h2>
+  <p>There are two things you'll want to install: the <strong>Claude Desktop App</strong> (the chat interface you'll use day-to-day) and <strong>Claude Code</strong> (the terminal-based coding agent that powers Figma-to-code workflows).</p>
+
+  <h3>Install the Claude Desktop App</h3>
+  <ol class="numbered-steps">
+    <li>Go to <a href="https://claude.com/download" target="_blank">claude.com/download</a> and download the installer for your operating system (Mac or Windows).</li>
+    <li>Open the downloaded file and follow the on-screen instructions to install.</li>
+    <li>Launch the app and sign in with your Anthropic account. If you don't have one, you can create a free account at <a href="https://claude.ai" target="_blank">claude.ai</a>.</li>
+    <li>That's it — you're ready to chat with Claude.</li>
+  </ol>
+
+  <h3>Install Claude Code</h3>
+  <p>Claude Code is the terminal tool that connects to Figma and generates components. Don't worry — you won't need to be a terminal expert.</p>
+  <ol class="numbered-steps">
+    <li>Open your computer's Terminal app (Mac) or Command Prompt (Windows).</li>
+    <li>Make sure you have Node.js installed. If not, download it from <a href="https://nodejs.org" target="_blank">nodejs.org</a> (pick the LTS version).</li>
+    <li>Type the following command and press Enter:</li>
+  </ol>
+  <div class="code-block">npm install -g @anthropic-ai/claude-code</div>
+  <ol class="numbered-steps" style="counter-reset: step 3;">
+    <li>Once installed, type <code>claude</code> in your terminal and press Enter. Follow the prompts to sign in with your Anthropic account.</li>
+  </ol>
+
+  <div class="tip">
+    <p><strong>Tip for designers:</strong> If the terminal feels intimidating, that's completely normal. You'll mostly just be pasting in a few commands. After the initial setup, Claude Code does the heavy lifting for you.</p>
+  </div>
+
+  <h3>Helpful Resources</h3>
+  <div class="resource-grid">
+    <div class="resource-card">
+      <span class="resource-type">Official</span>
+      <h4>Claude Desktop Installation Guide</h4>
+      <p>Anthropic's own step-by-step instructions for getting the desktop app running.</p>
+      <a href="https://support.claude.com/en/articles/10065433-installing-claude-desktop" target="_blank">View guide</a>
+    </div>
+    <div class="resource-card">
+      <span class="resource-type">Tutorial</span>
+      <h4>Claude Code for Beginners (2026)</h4>
+      <p>A complete walkthrough from installation to building your first project.</p>
+      <a href="https://dev.to/ayyazzafar/claude-code-tutorial-for-beginners-2026-from-installation-to-building-your-first-project-1lma" target="_blank">Read tutorial</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!--  DIVIDER                                           -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="section-divider cyan">
+  <div>
+    <span class="section-tag">Learning the Basics</span>
+    <h2>Get Comfortable with Claude Before Diving In.</h2>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!--  STEP 2: BASIC VIDEOS                              -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section class="step-section alt-bg">
+  <div class="step-inner">
+    <span class="step-number">Step 2</span>
+    <h2>Learning How to Use Claude</h2>
+    <p>Before connecting Figma, spend a little time getting familiar with how Claude works. These videos and resources are hand-picked for designers — no prior AI experience required.</p>
+
+    <h3>Recommended Videos and Courses</h3>
+    <div class="resource-grid">
+      <div class="resource-card">
+        <span class="resource-type">Video Course</span>
+        <h4>Anthropic's Official Video Tutorials</h4>
+        <p>Short, focused videos from Anthropic themselves covering the fundamentals of using Claude.</p>
+        <a href="https://support.claude.com/en/collections/10548294-video-tutorials" target="_blank">Watch videos</a>
+      </div>
+      <div class="resource-card">
+        <span class="resource-type">Video — 17 min</span>
+        <h4>Claude Code Beginner's Tutorial: Build a Movie App</h4>
+        <p>A practical, beginner-friendly walkthrough that shows you how Claude Code actually works by building a real project.</p>
+        <a href="https://www.classcentral.com/course/youtube-claude-code-beginner-s-tutorial-build-a-movie-app-in-15-minutes-2025-489297" target="_blank">Watch tutorial</a>
+      </div>
+      <div class="resource-card">
+        <span class="resource-type">Video Course</span>
+        <h4>Claude Code in Action (Anthropic Academy)</h4>
+        <p>Official hands-on training from Anthropic's learning platform. Great for building confidence.</p>
+        <a href="https://anthropic.skilljar.com/claude-code-in-action" target="_blank">Start course</a>
+      </div>
+      <div class="resource-card">
+        <span class="resource-type">Written Guide</span>
+        <h4>Claude Code Full Guide (2026)</h4>
+        <p>A comprehensive text-based reference if you prefer reading over watching.</p>
+        <a href="https://www.theneuron.ai/explainer-articles/claude-code-complete-guide-best-tutorials-2026/" target="_blank">Read guide</a>
+      </div>
+    </div>
+
+    <div class="tip">
+      <p><strong>What to focus on first:</strong> Just learn how to have a conversation with Claude and ask it to do things. Think of it like explaining a task to a very capable intern — the more clearly you describe what you want, the better the result.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!--  STEP 3: FIGMA MCP                                 -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section class="step-section">
+  <span class="step-number">Step 3</span>
+  <h2>Connecting Figma to Claude</h2>
+  <p>The Figma MCP (Model Context Protocol) server is what lets Claude "see" your Figma designs — every color, spacing value, component variant, and layout detail. Here's how to set it up.</p>
+
+  <h3>Option A: Remote Server (Easiest)</h3>
+  <p>This is the recommended approach. No extra apps needed.</p>
+  <ol class="numbered-steps">
+    <li>Open your terminal and paste this command:</li>
+  </ol>
+  <div class="code-block">claude mcp add --transport http figma-remote-mcp https://mcp.figma.com/mcp</div>
+  <ol class="numbered-steps" style="counter-reset: step 1;">
+    <li>Restart Claude Code if it was already running.</li>
+    <li>In Claude Code, type <code>/mcp</code> and press Enter. You'll see the Figma server listed. Press Enter again to log in to your Figma account and click "Allow access."</li>
+    <li>Type <code>/mcp</code> again to confirm the status shows "connected."</li>
+  </ol>
+
+  <div class="tip">
+    <p><strong>To make it available across all your projects</strong>, add the <code>--scope user</code> flag:</p>
+  </div>
+  <div class="code-block">claude mcp add --scope user --transport http figma https://mcp.figma.com/mcp</div>
+
+  <h3>Option B: Desktop Server (Uses the Figma App)</h3>
+  <div class="instruction-card">
+    <h4>If you prefer using the Figma desktop app:</h4>
+    <p>Open Figma Desktop, go to the Inspect panel, and click "Enable desktop MCP server." The server runs locally at <code>http://127.0.0.1:3845/mcp</code>.</p>
+  </div>
+
+  <h3>Helpful Resources</h3>
+  <div class="resource-grid">
+    <div class="resource-card">
+      <span class="resource-type">Official Docs</span>
+      <h4>Figma MCP Server Guide</h4>
+      <p>Figma's own comprehensive guide to setting up and using the MCP server.</p>
+      <a href="https://help.figma.com/hc/en-us/articles/32132100833559-Guide-to-the-Figma-MCP-server" target="_blank">View guide</a>
+    </div>
+    <div class="resource-card">
+      <span class="resource-type">Tutorial</span>
+      <h4>Connect Claude Code with Figma MCP Fast</h4>
+      <p>A quick-start guide specifically for getting Claude Code and Figma talking to each other.</p>
+      <a href="https://medium.com/design-bootcamp/how-to-connect-claude-code-with-figma-mcp-d7f543b49f76" target="_blank">Read tutorial</a>
+    </div>
+    <div class="resource-card">
+      <span class="resource-type">Official Docs</span>
+      <h4>Figma Remote Server Setup</h4>
+      <p>Developer documentation for the remote MCP server installation with detailed steps.</p>
+      <a href="https://developers.figma.com/docs/figma-mcp-server/remote-server-installation/" target="_blank">View docs</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!--  DIVIDER                                           -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="section-divider yellow">
+  <div>
+    <span class="section-tag">Design to Code</span>
+    <h2>Turning Figma Designs into Real Components.</h2>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!--  STEP 4: GETTING COMPONENTS INTO CLAUDE CODE       -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section class="step-section alt-bg">
+  <div class="step-inner">
+    <span class="step-number">Step 4</span>
+    <h2>Getting Components from Figma into Claude Code</h2>
+    <p>Once Figma MCP is connected, you can select any frame or component in Figma and ask Claude to turn it into code. Here's the basic workflow.</p>
+
+    <h3>The Basic Flow</h3>
+    <div class="instruction-card highlight">
+      <h4>1. Copy the Figma Link</h4>
+      <p>In Figma, right-click on any frame or component and choose "Copy link to selection." This gives Claude the exact node to look at.</p>
+    </div>
+    <div class="instruction-card highlight">
+      <h4>2. Paste It into Claude Code</h4>
+      <p>In your terminal running Claude Code, paste the link along with your request. For example: "Build a React component from this Figma frame: [paste link]"</p>
+    </div>
+    <div class="instruction-card highlight">
+      <h4>3. Review and Iterate</h4>
+      <p>Claude will generate the code. Review the output and ask for changes just like you would in a conversation — "make the padding larger" or "change the font to match our system."</p>
+    </div>
+
+    <h3>Video Walkthroughs</h3>
+    <div class="resource-grid">
+      <div class="resource-card">
+        <span class="resource-type">Video — 21 min</span>
+        <h4>From Figma to Code with MCP</h4>
+        <p>DesignCourse tutorial showing how to transform a Figma landing page into working code using Claude and MCP.</p>
+        <a href="https://www.classcentral.com/course/youtube-from-figma-to-cursor-claude-code-with-mcp-469569" target="_blank">Watch video</a>
+      </div>
+      <div class="resource-card">
+        <span class="resource-type">Written + Video</span>
+        <h4>Claude Code x Figma MCP: The Designer's Playbook</h4>
+        <p>A hands-on guide from ADPList's AI First Designer School with embedded video demos.</p>
+        <a href="https://adplist.substack.com/p/how-to-build-with-figma-mcp-the-designers" target="_blank">View playbook</a>
+      </div>
+      <div class="resource-card">
+        <span class="resource-type">Blog + Tutorial</span>
+        <h4>Claude Code + Figma MCP Server (Builder.io)</h4>
+        <p>Detailed walkthrough of the bidirectional workflow between Claude Code and Figma.</p>
+        <a href="https://www.builder.io/blog/claude-code-figma-mcp-server" target="_blank">Read article</a>
+      </div>
+      <div class="resource-card">
+        <span class="resource-type">Blog</span>
+        <h4>Claude Code + Figma (UX Planet)</h4>
+        <p>A designer-perspective overview of how Claude Code and Figma work together in practice.</p>
+        <a href="https://uxplanet.org/claude-code-figma-f647facbe181" target="_blank">Read article</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!--  STEP 5: STORYBOOK                                 -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section class="step-section">
+  <span class="step-number">Step 5</span>
+  <h2>Building a Design System in Storybook</h2>
+  <p>Storybook is a tool that lets you view and interact with your components in isolation — like a living catalog of your design system. Combined with Claude and Figma MCP, you can go from Figma components to a browsable Storybook library.</p>
+
+  <h3>What is Storybook?</h3>
+  <p>Think of Storybook as a visual playground for your components. Each component gets its own page where you can see all its states and variations, test it interactively, and document how to use it. It's the bridge between design and development.</p>
+
+  <h3>Getting Started</h3>
+  <div class="instruction-card highlight-cyan">
+    <h4>Set up a new Storybook project</h4>
+    <p>In your terminal, navigate to your project folder and run:</p>
+  </div>
+  <div class="code-block">npx storybook@latest init</div>
+  <p>This sets up everything you need. Storybook will open in your browser automatically.</p>
+
+  <h3>The Workflow: Figma to Storybook via Claude</h3>
+  <div class="instruction-card highlight">
+    <h4>1. Identify Your Components in Figma</h4>
+    <p>Start with your most foundational components — buttons, inputs, cards, typography. Copy the Figma link for each one.</p>
+  </div>
+  <div class="instruction-card highlight">
+    <h4>2. Ask Claude to Generate Component + Story</h4>
+    <p>Paste the Figma link into Claude Code and ask it to create both a React component and a Storybook story file. For example: "Create a React component and Storybook story from this Figma button component: [link]"</p>
+  </div>
+  <div class="instruction-card highlight">
+    <h4>3. Review in Storybook</h4>
+    <p>Run <code>npm run storybook</code> and view your new component in the browser. Check every state and variant matches your Figma design.</p>
+  </div>
+  <div class="instruction-card highlight">
+    <h4>4. Iterate with Claude</h4>
+    <p>If something doesn't match, just tell Claude what needs to change. "The hover state should use our brand orange" or "Add a disabled variant."</p>
+  </div>
+
+  <h3>Key Resources</h3>
+  <div class="resource-grid">
+    <div class="resource-card">
+      <span class="resource-type">Deep Dive</span>
+      <h4>Supercharge Your Design System with LLMs and Storybook MCP</h4>
+      <p>An excellent Codrops article on using Storybook's MCP server with AI agents to build component libraries with quality context.</p>
+      <a href="https://tympanus.net/codrops/2025/12/09/supercharge-your-design-system-with-llms-and-storybook-mcp/" target="_blank">Read article</a>
+    </div>
+    <div class="resource-card">
+      <span class="resource-type">Design Systems</span>
+      <h4>Demystifying Design Systems with Figma MCP + Claude</h4>
+      <p>How to keep Storybook and Figma in sync, prevent component drift, and automate token syncing.</p>
+      <a href="https://www.designsystemscollective.com/demystifying-design-systems-and-using-figmas-mcp-with-claude-cli-674d1b66468b" target="_blank">Read article</a>
+    </div>
+    <div class="resource-card">
+      <span class="resource-type">Workflow Guide</span>
+      <h4>Claude Code + Figma MCP: Design-to-Code Workflow</h4>
+      <p>A practical workflow guide covering the full loop from design to component to documentation.</p>
+      <a href="https://sergeichyrkov.com/blog/claude-code-figma-mcp-design-to-code-workflow" target="_blank">View guide</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!--  DIVIDER                                           -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="section-divider orange">
+  <div>
+    <span class="section-tag">Design Tokens + Prompts</span>
+    <h2>Capturing Your Design System in Reusable Prompts.</h2>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!--  STEP 6: DESIGN TOKENS + PROMPTS                   -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section class="step-section alt-bg">
+  <div class="step-inner">
+    <span class="step-number">Step 6</span>
+    <h2>Design Tokens and Prompt Templates</h2>
+    <p>Design tokens are the foundational values of your design system — colors, spacing, typography, radii, shadows. By capturing these in a prompt template, you give Claude the context it needs to generate components that match your system every time.</p>
+
+    <h3>What Are Design Tokens?</h3>
+    <p>Design tokens are named values that represent the small, repeated design decisions in your system. Instead of saying "use #EA633F," you say "use our brand-primary color." Claude can read these and apply them consistently across every component it generates.</p>
+
+    <h3>Extracting Tokens from Figma</h3>
+    <p>With Figma MCP connected, you can ask Claude to extract your tokens directly. Try pasting a link to your styles/variables page in Figma and asking:</p>
+
+    <div class="prompt-box">
+      <h4>Prompt: Extract Design Tokens</h4>
+      <pre>Look at this Figma file and extract all design tokens including:
+- Color palette (primary, secondary, neutrals, semantic)
+- Typography scale (font families, sizes, weights, line heights)
+- Spacing scale (padding, margin, gap values)
+- Border radius values
+- Shadow definitions
+- Breakpoints
+
+Output them as a JSON tokens file and a CSS custom properties file.
+
+Figma link: [paste your link here]</pre>
+    </div>
+
+    <h3>Reusable Prompt Templates</h3>
+    <p>Save these prompts somewhere handy. Every time you need to generate a new component, start with the context prompt so Claude knows your system, then follow with the specific component request.</p>
+
+    <div class="prompt-box">
+      <h4>Prompt Template 1: Set Design System Context</h4>
+      <pre>You are helping me build components for our design system.
+Here are our design tokens:
+
+COLORS:
+- Primary: [your hex]
+- Secondary: [your hex]
+- Background: [your hex]
+- Surface: [your hex]
+- Text Primary: [your hex]
+- Text Secondary: [your hex]
+- Border: [your hex]
+- Error: [your hex]
+- Success: [your hex]
+
+TYPOGRAPHY:
+- Font Family Headings: [your font]
+- Font Family Body: [your font]
+- Scale: h1=[size], h2=[size], h3=[size], body=[size], caption=[size]
+
+SPACING:
+- xs: [value]  sm: [value]  md: [value]  lg: [value]  xl: [value]
+
+RADIUS:
+- sm: [value]  md: [value]  lg: [value]  full: 9999px
+
+Always use these tokens when generating components. Use CSS custom
+properties (variables) that reference these values. Every component
+should have a corresponding Storybook story showing all variants.</pre>
+    </div>
+
+    <div class="prompt-box">
+      <h4>Prompt Template 2: Generate a Component from Figma</h4>
+      <pre>Using the design system context I gave you, create a React
+component and Storybook story from this Figma design:
+
+[paste Figma link]
+
+Requirements:
+- Use our design tokens (CSS custom properties)
+- Include all variants visible in the Figma design
+- Add prop types / TypeScript interfaces
+- Create a Storybook story with controls for all props
+- Include a "Docs" block describing usage guidelines
+- Make it accessible (keyboard nav, ARIA labels, focus states)</pre>
+    </div>
+
+    <div class="prompt-box">
+      <h4>Prompt Template 3: Audit Component Against Figma</h4>
+      <pre>Compare this existing component to the original Figma design
+and list any differences:
+
+Figma link: [paste link]
+Component file: [paste file path or code]
+
+Check for:
+- Color accuracy (compare to our token values)
+- Spacing and padding
+- Typography (font, size, weight, line-height)
+- Border radius and shadows
+- Responsive behavior
+- Missing states (hover, focus, disabled, loading)
+- Accessibility issues</pre>
+    </div>
+
+    <div class="prompt-box">
+      <h4>Prompt Template 4: Generate Full Token File from Figma</h4>
+      <pre>Analyze my Figma design system file and generate a complete
+design tokens package:
+
+Figma link: [paste link to your styles/variables page]
+
+Output:
+1. tokens.json — structured token file (compatible with Style Dictionary)
+2. tokens.css — CSS custom properties
+3. tokens.ts — TypeScript constants with full type safety
+4. A summary table of all tokens organized by category
+
+Group tokens by: color, typography, spacing, sizing, radius,
+shadow, border, opacity, z-index, breakpoint.</pre>
+    </div>
+
+    <div class="tip">
+      <p><strong>Pro tip:</strong> Save your "Design System Context" prompt as a <code>CLAUDE.md</code> file in the root of your project. Claude Code automatically reads this file at the start of every session, so it will always know your design system without you having to paste the prompt each time.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!--  FOOTER                                            -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section class="footer">
+  <h2>You're Ready to Start.</h2>
+  <p>The best way to learn is to pick one component from your Figma file and run through the full workflow. Start small, iterate, and build confidence one component at a time.</p>
+  <div style="margin-top: 32px;">
+    <a href="https://claude.com/download" target="_blank" style="display: inline-block; padding: 12px 32px; background: var(--cc-orange); color: var(--cc-black); font-family: var(--cc-font-display); font-weight: 500; text-decoration: none; border-radius: 4px; margin-right: 16px;">Download Claude</a>
+    <a href="https://help.figma.com/hc/en-us/articles/32132100833559-Guide-to-the-Figma-MCP-server" target="_blank" style="display: inline-block; padding: 12px 32px; background: transparent; color: var(--cc-white); font-family: var(--cc-font-display); font-weight: 500; text-decoration: none; border-radius: 4px; border: 1px solid rgba(255,255,255,0.3);">Figma MCP Docs</a>
+  </div>
+  <div class="footer-bar">
+    <span>Chameleon Collective</span>
+    <span>Designer's Guide — 2026</span>
+  </div>
+</section>
+
+</body>
+</html>
