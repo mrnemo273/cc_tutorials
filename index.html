@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tutorials — Chameleon Collective</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cc-orange: #EA633F;
+  --cc-yellow: #E8EB74;
+  --cc-cyan: #88E8F0;
+  --cc-cream: #EAEAC8;
+  --cc-black: #121212;
+  --cc-near-black: #1E1E1E;
+  --cc-white: #FFFFFF;
+  --cc-light-gray: #F5F5F5;
+  --cc-warm-gray: #E8E8E8;
+  --cc-mid-gray: #666666;
+  --cc-font-display: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif;
+  --cc-font-body: 'Inter', Arial, sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+h1, h2, h3, h4, h5, h6 { font-family: var(--cc-font-display); }
+body, p, span, li, td, input, textarea { font-family: var(--cc-font-body); }
+
+body {
+  background: var(--cc-white);
+  color: var(--cc-black);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── HEADER ── */
+.header {
+  background: var(--cc-black);
+  padding: 48px 80px 64px;
+}
+
+.header-logo img {
+  width: 110px;
+  display: block;
+  margin-bottom: 48px;
+}
+
+.header-label {
+  font-family: var(--cc-font-display);
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--cc-orange);
+  margin-bottom: 16px;
+  display: block;
+}
+
+.header h1 {
+  font-size: 4rem;
+  font-weight: 300;
+  line-height: 1.05;
+  color: var(--cc-white);
+}
+
+.header h1 em {
+  font-style: italic;
+  color: var(--cc-orange);
+}
+
+.header p {
+  font-size: 1.0625rem;
+  color: rgba(255,255,255,0.55);
+  max-width: 520px;
+  line-height: 1.65;
+  margin-top: 24px;
+}
+
+/* ── TUTORIAL LIST ── */
+.tutorials {
+  padding: 64px 80px 80px;
+}
+
+.tutorials-heading {
+  font-family: var(--cc-font-display);
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--cc-mid-gray);
+  margin-bottom: 32px;
+}
+
+.tutorial-item {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 32px;
+  padding: 32px 0;
+  border-top: 1px solid var(--cc-warm-gray);
+  text-decoration: none;
+  color: inherit;
+  transition: background 0.15s;
+}
+
+.tutorial-item:last-child {
+  border-bottom: 1px solid var(--cc-warm-gray);
+}
+
+.tutorial-item:hover {
+  background: var(--cc-light-gray);
+  margin: 0 -24px;
+  padding: 32px 24px;
+}
+
+.tutorial-number {
+  font-family: var(--cc-font-display);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--cc-mid-gray);
+  min-width: 32px;
+}
+
+.tutorial-info h2 {
+  font-size: 1.375rem;
+  font-weight: 500;
+  line-height: 1.25;
+  color: var(--cc-black);
+  margin-bottom: 6px;
+}
+
+.tutorial-info p {
+  font-size: 0.9375rem;
+  color: var(--cc-mid-gray);
+  line-height: 1.5;
+}
+
+.tutorial-tags {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.tag {
+  display: inline-block;
+  padding: 5px 14px;
+  background: var(--cc-light-gray);
+  border-radius: 20px;
+  font-family: var(--cc-font-display);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--cc-mid-gray);
+}
+
+.tag.orange {
+  background: rgba(234,99,63,0.12);
+  color: var(--cc-orange);
+}
+
+.tutorial-arrow {
+  font-size: 1.25rem;
+  color: var(--cc-orange);
+  transition: transform 0.15s;
+}
+
+.tutorial-item:hover .tutorial-arrow {
+  transform: translateX(4px);
+}
+
+/* ── FOOTER ── */
+.footer {
+  background: var(--cc-black);
+  padding: 40px 80px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footer span {
+  font-family: var(--cc-font-display);
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: rgba(255,255,255,0.4);
+}
+
+@media (max-width: 768px) {
+  .header { padding: 32px; }
+  .header h1 { font-size: 2.5rem; }
+  .tutorials { padding: 40px 32px 60px; }
+  .tutorial-item { grid-template-columns: 1fr; gap: 12px; }
+  .tutorial-tags { flex-wrap: wrap; }
+  .tutorial-number { display: none; }
+  .tutorial-arrow { display: none; }
+  .footer { padding: 32px; flex-direction: column; gap: 8px; }
+}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-logo">
+    <img src="assets/CCWorkMark_Horiz_Black.png" alt="Chameleon Collective" style="filter: invert(1);">
+  </div>
+  <span class="header-label">Learning Hub</span>
+  <h1>Tutorials &<br><em>Guides</em></h1>
+  <p>Step-by-step walkthroughs for designers and developers working with modern AI-powered design and development tools.</p>
+</header>
+
+<main class="tutorials">
+  <div class="tutorials-heading">Published Tutorials</div>
+
+  <a href="tutorials/figma-to-storybook/" class="tutorial-item">
+    <span class="tutorial-number">01</span>
+    <div class="tutorial-info">
+      <h2>From Figma to Storybook with Claude Code</h2>
+      <p>A designer's guide to turning Figma designs into production-ready components using Claude Code and Storybook.</p>
+    </div>
+    <div class="tutorial-tags">
+      <span class="tag orange">Figma</span>
+      <span class="tag">Storybook</span>
+      <span class="tag">Claude Code</span>
+    </div>
+    <span class="tutorial-arrow">&rarr;</span>
+  </a>
+
+</main>
+
+<footer class="footer">
+  <span>Chameleon Collective</span>
+  <span>2026</span>
+</footer>
+
+</body>
+</html>
